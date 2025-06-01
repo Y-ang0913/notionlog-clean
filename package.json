@@ -1,0 +1,25 @@
+{
+  "name": "notionlogprojectclean",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ducanh2912/next-pwa": "^10.2.9",
+    "@notionhq/client": "^2.2.4",
+    "dotenv": "^16.4.5",
+    "next": "^15.3.2",
+    "openai": "^4.26.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.6",
+    "eslint": "8.56.0",
+    "eslint-config-next": "15.3.2"
+  }
+}
