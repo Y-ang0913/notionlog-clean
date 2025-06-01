@@ -5,7 +5,7 @@ const notion = new Client({
   auth: process.env.NOTION_API_KEY,
 });
 
-const databaseId = process.env.NOTION_DATABASE_ID;
+const databaseId = process.env.NOTION_DATABASE_ID!;
 
 export async function writeToNotionLog({
   userInput,
@@ -15,36 +15,38 @@ export async function writeToNotionLog({
   timestamp,
 }: {
   userInput: string;
-  personaChain: string[]; // 已确保为数组
+  personaChain: string[];
   replyContent: string;
   source: string;
   timestamp: string;
 }) {
-  if (!databaseId) throw new Error('❌ 缺少 NOTION_DATABASE_ID');
-
   try {
-    const response = await notion.pages.create({
+    await notion.pages.create({
       parent: {
         database_id: databaseId,
       },
       properties: {
         用户输入: {
-          title: [
+          rich_text: [
             {
+              type: 'text',
               text: {
-                content: userInput || '（未填写）',
+                content: userInput || '（未输入）',
               },
             },
           ],
         },
         人格链: {
-          multi_select: personaChain.map((name) => ({ name: name.trim() })),
+          multi_select: personaChain.map((name) => ({
+            name: name.trim(),
+          })),
         },
         回复内容: {
           rich_text: [
             {
+              type: 'text',
               text: {
-                content: replyContent || '（无内容）',
+                content: replyContent || '',
               },
             },
           ],
@@ -52,8 +54,9 @@ export async function writeToNotionLog({
         来源渠道: {
           rich_text: [
             {
+              type: 'text',
               text: {
-                content: source || '（未指定）',
+                content: source || '未指定',
               },
             },
           ],
@@ -65,8 +68,6 @@ export async function writeToNotionLog({
         },
       },
     });
-
-    return { result: '✅ 成功写入 Notion', pageId: response.id };
   } catch (error: any) {
     console.error('❌ Notion 写入失败:', error.message || error);
     throw new Error('Failed to write to Notion');
